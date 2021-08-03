@@ -1,5 +1,5 @@
+import json
 import time
-from bs4 import BeautifulSoup
 from selenium import webdriver # type: ignore
 from selenium.webdriver.support.ui import WebDriverWait # type: ignore
 import mysql.connector
@@ -51,8 +51,22 @@ def scrap(username):
         if username == x[0]:
             available = False
     
-    if available:
-        #Get data and run show()
+    if not available:
+        mycursor.execute("SELECT * FROM user_scraped_details")
+        data = mycursor.fetchall()[0]
+        getName = data[1]
+        getCity = data[2]
+        getWork = data[3]
+        global p
+        if getCity != "" and getWork != []:
+            p = Person(getName, getCity, getWork)
+        elif getCity != "" and getWork == []:
+            p = Person(getName, getCity)
+        elif getCity == "" and getWork != []:
+            p = Person(getName, getWork)
+        elif getCity == "" and getWork == []:
+            p = Person(getName)
+        p.show()
         return
 
     NAME = ""
@@ -155,8 +169,10 @@ def scrap(username):
     else:
         print("There are no favourites")
     
-    sql = "INSERT INTO user_scraped_details (username, name, city, work, favorites) VALUES (%s, %s, %s, %s, %s)"
-    val = (username, NAME, CITY, WORK, FAV)
+    sql = "INSERT INTO user_scraped_details (username, name, city, work, favourites) VALUES (%s, %s, %s, %s, %s)"
+    workStr = json.dumps(WORK)
+    favStr = json.dumps(FAV)
+    val = (username, NAME, CITY, workStr, favStr)
 
     mycursor.execute(sql, val)
     mydb.commit()
@@ -171,6 +187,3 @@ def scrap(username):
     elif CITY == "" and WORK == []:
         person = Person(NAME)
 
-
-scrap("vishwa.prakash.771")
-person.show()
