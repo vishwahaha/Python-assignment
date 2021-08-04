@@ -5,14 +5,43 @@ class DimensionError(Exception):
         print(msg)
 class matrix: 
     def __init__(self, m):
-        if type(m[0]) is int:
-            self.mtx = [m]
-            self.r = 1
-            self.c = len(m)
-        if type(m[0]) is list:
-            self.mtx = m
-            self.r = len(m)
-            self.c = len(m[0])
+        self.rowCheck = False
+        self.typeFlag = True
+        self.isInt = False
+        self.isList = False
+        for x in m:
+            if self.isInt:
+                if type(x) is not int:
+                    self.typeFlag = False
+                    raise DimensionError("Both int and list can't be entered together")
+            if self.isList:
+                if type(x) is not list:
+                    self.typeFlag = False
+                    raise DimensionError("Both int and list can't be entered together")
+            if type(x) is int:
+                self.isInt = True
+            if type(x) is list:
+                self.isList = True
+
+        if self.isList:
+            self.rowLen = len(m[0])
+            for x in m:
+                if len(x) != self.rowLen:
+                    raise DimensionError("rows of the matrix must be of same length")
+            self.rowCheck = True
+
+        if self.isInt and self.typeFlag:
+            self.rowCheck = True
+
+        if self.rowCheck and self.typeFlag:
+            if self.isInt:
+                self.mtx = [m]
+                self.r = 1
+                self.c = len(m)
+            if self.isList:
+                self.mtx = m
+                self.r = len(m)
+                self.c = len(m[0])
             
     def __add__(self, mtx2):
         if self.r == mtx2.r and self.c == mtx2.c:
@@ -82,7 +111,7 @@ class matrix:
 m1 = [[1,1,6,8], [5,6,7,1], [6,9,6,9], [0,4,2,0]]
 m2 = [[1,0,0,0], [0,1,0,0], [0,0,1,0], [0,0,0,1]]
 #row matrix
-m3 = [[1,2,1,7,6]] 
+m3 = [[1,2,1,7,6]] #can also be entered as m3 = [1,2,1,7,6]
 #column matrix
 m4 = [[0], [6], [9], [3], [1]]
 
