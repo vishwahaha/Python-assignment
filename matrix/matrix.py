@@ -11,11 +11,11 @@ class matrix:
         self.isList = False
         for x in m:
             if self.isInt:
-                if type(x) is not int:
+                if  not isinstance(x, int):
                     self.typeFlag = False
                     raise DimensionError("Both int and list can't be entered together")
             if self.isList:
-                if type(x) is not list:
+                if not isinstance(x, list):
                     self.typeFlag = False
                     raise DimensionError("Both int and list can't be entered together")
             if type(x) is int:
