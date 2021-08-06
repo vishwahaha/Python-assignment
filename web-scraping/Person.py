@@ -83,8 +83,8 @@ def scrap(username):
         submit = browser.find_element_by_id("loginbutton")
     except:
         submit = browser.find_element_by_name("login")
-    email.send_keys("nrgiiwsbbgdndstxit@bptfp.net")
-    password.send_keys("test_selenium")
+    email.send_keys("login_email")
+    password.send_keys("login_pass")
     submit.click()
     time.sleep(1)
 
@@ -187,3 +187,4 @@ def scrap(username):
     elif CITY == "" and WORK == []:
         person = Person(NAME)
 
+scrap("rishi.ranjan.54966")
